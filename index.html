@@ -53,7 +53,7 @@
             color: green;
         }
         #menu {
-            display: none;
+            display: none; /* Скрываем меню по умолчанию */
             margin-top: 20px;
         }
     </style>
@@ -83,7 +83,6 @@
             <button onclick="showInfo('contacts')">Контакты</button>
             <button onclick="showInfo('address')">Адрес</button>
             <button onclick="showInfo('location')">Местоположение</button>
-
             <div id="info"></div>
         </div>
     </div>
@@ -116,8 +115,8 @@
                 tg.sendData(JSON.stringify(userData)); // Отправляем данные в Telegram боту
                 document.getElementById('result').innerHTML = 'Данные успешно отправлены!';
                 // Скрываем форму и показываем меню
-                document.getElementById('userDataForm').style.display = 'none';
-                document.getElementById('menu').style.display = 'block';
+                document.getElementById('userDataForm').style.display = 'none'; // Скрываем форму
+                document.getElementById('menu').style.display = 'block'; // Показываем меню
             } else {
                 document.getElementById('result').innerHTML = 'Ошибка: Telegram Web App API не доступен.';
             }
@@ -148,4 +147,3 @@
     </script>
 </body>
 </html>
-
