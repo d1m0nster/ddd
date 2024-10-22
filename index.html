@@ -32,6 +32,15 @@
             background-color: #4CAF50;
             color: white;
         }
+        .info {
+            display: none;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
         form {
             margin-top: 20px;
             text-align: left;
@@ -47,14 +56,6 @@
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-        }
-        #result {
-            margin-top: 20px;
-            color: green;
-        }
-        #menu {
-            display: none; /* Скрываем меню по умолчанию */
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -78,72 +79,61 @@
 
         <div id="result"></div>
 
-        <!-- Меню с кнопками после отправки данных -->
-        <div id="menu">
-            <button onclick="showInfo('contacts')">Контакты</button>
-            <button onclick="showInfo('address')">Адрес</button>
-            <button onclick="showInfo('location')">Местоположение</button>
-            <div id="info"></div>
+        <div id="contacts" class="info">
+            <h2>Контакты</h2>
+            <p>Телефон: 8(49133)2-48-37. </p>
+            <p>Электронная почта: mby.gdk@yandex.ru</p>
+            <p> gdk.sasovo@ryazan.gov.ru</p>
+        </div>
+
+        <div id="hours" class="info">
+            <h2>Время работы</h2>
+            <p>Понедельник - Пятница: с 08:00 до 17:00</p>
+            <p>Суббота и Воскресенье: закрыто</p>
+        </div>
+
+        <div id="location" class="info">
+            <h2>Местоположение</h2>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru!4v1698000185654!5m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
+                frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
-        // Инициализация Web App API от Telegram
-        const tg = window.Telegram.WebApp;
-
-        // Устанавливаем тему на основе предпочтений пользователя
-        tg.expand(); // Расширяем Web App на всю ширину
-
-        // Обработчик отправки формы
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Получение данных из формы
+            // Собираем данные формы
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
 
-            // Объект с пользовательскими данными
-            const userData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email
-            };
-
-            // Проверяем наличие объекта tg
-            if (tg && tg.sendData) {
-                tg.sendData(JSON.stringify(userData)); // Отправляем данные в Telegram боту
-                document.getElementById('result').innerHTML = 'Данные успешно отправлены!';
-                // Скрываем форму и показываем меню
-                document.getElementById('userDataForm').style.display = 'none'; // Скрываем форму
-                document.getElementById('menu').style.display = 'block'; // Показываем меню
-            } else {
-                document.getElementById('result').innerHTML = 'Ошибка: Telegram Web App API не доступен.';
-            }
+            // Отправляем данные боту через fetch API
+            fetch('https://api.telegram.org/botYOUR_API_TOKEN/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: 'CHAT_ID',
+                    text: `Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}`,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    document.getElementById('result').innerHTML = 'Данные отправлены успешно!';
+                } else {
+                    document.getElementById('result').innerHTML = 'Ошибка при отправке данных.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = 'Произошла ошибка.';
+                console.error('Error:', error);
+            });
         });
-
-        // Функция для отображения информации при нажатии на кнопки
-        function showInfo(type) {
-            let info = '';
-
-            if (type === 'contacts') {
-                info = '<h2>Контакты</h2><p>Телефон: 8(49133)2-48-37</p><p>Email: mby.gdk@yandex.ru</p>';
-            } else if (type === 'address') {
-                info = '<h2>Адрес</h2><p>г. Сасово, ул. Ленина, 18</p>';
-            } else if (type === 'location') {
-                info = `
-                    <h2>Местоположение</h2>
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru!4v1698000185654!5m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
-                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                `;
-            }
-
-            document.getElementById('info').innerHTML = info;
-        }
-
-        // Функция для отладки
-        console.log(tg); // Проверьте, что объект tg корректно инициализирован
     </script>
 </body>
 </html>
+
