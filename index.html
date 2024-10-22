@@ -32,54 +32,83 @@
             background-color: #4CAF50;
             color: white;
         }
-        .info {
-            display: none;
+        form {
             margin-top: 20px;
+            text-align: left;
         }
-        iframe {
-            width: 100%;
-            height: 300px;
-            border: none;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #result {
+            margin-top: 20px;
+            color: green;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Сасовский Дом Культуры</h1>
-        <button onclick="showInfo('contacts')">Контакты</button>
-        <button onclick="showInfo('hours')">Время работы</button>
-        <button onclick="showInfo('location')">Местоположение</button>
 
-        <div id="contacts" class="info">
-            <h2>Контакты</h2>
-            <p>Телефон: 8(49133)2-48-37. </p>
-            <p>Электронная почта:</p>
-            <p>mby.gdk@yandex.ru
-            <p> gdk.sasovo@ryazan.gov.ru</p>
-        </div>
+        <!-- Форма для ввода данных пользователя -->
+        <form id="userDataForm">
+            <label for="firstName">Имя</label>
+            <input type="text" id="firstName" name="firstName" required>
 
-        <div id="hours" class="info">
-            <h2>Время работы</h2>
-            <p>Понедельник - Пятница: с 08:00 до 17:00</p>
-            <p>Суббота и Воскресенье: закрыто</p>
-        </div>
+            <label for="lastName">Фамилия</label>
+            <input type="text" id="lastName" name="lastName" required>
 
-        <div id="location" class="info">
-            <h2>Местоположение</h2>
-            <!-- Встраивание карты Google с правильными координатами -->
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru!4v1698000185654!5m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
-                frameborder="0" allowfullscreen></iframe>
-        </div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <button type="submit">Отправить данные</button>
+        </form>
+
+        <div id="result"></div>
     </div>
 
     <script>
-        function showInfo(section) {
-            // Скрываем все разделы
-            document.querySelectorAll('.info').forEach(div => div.style.display = 'none');
-            // Показываем выбранный раздел
-            document.getElementById(section).style.display = 'block';
-        }
+        // Инициализация Web App API от Telegram
+        const tg = window.Telegram.WebApp;
+
+        // Устанавливаем тему на основе предпочтений пользователя
+        tg.expand(); // Расширяем Web App на всю ширину
+
+        // Обработчик отправки формы
+        document.getElementById('userDataForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Получение данных из формы
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+
+            // Объект с пользовательскими данными
+            const userData = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email
+            };
+
+            // Проверяем наличие объекта tg
+            if (tg && tg.sendData) {
+                tg.sendData(JSON.stringify(userData)); // Отправляем данные в Telegram боту
+                document.getElementById('result').innerHTML = 'Данные успешно отправлены!';
+            } else {
+                document.getElementById('result').innerHTML = 'Ошибка: Telegram Web App API не доступен.';
+            }
+        });
+
+        // Функция для отладки
+        console.log(tg); // Проверьте, что объект tg корректно инициализирован
     </script>
 </body>
 </html>
