@@ -5,64 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-        }
-        form {
-            margin-top: 20px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        #result {
-            margin-top: 20px;
-            color: green;
-        }
-        #menu {
-            display: none; /* Скрываем меню по умолчанию */
-            margin-top: 20px;
-        }
+        /* Ваши стили */
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Сасовский Дом Культуры</h1>
 
-        <!-- Форма для ввода данных пользователя -->
         <form id="userDataForm">
             <label for="firstName">Имя</label>
             <input type="text" id="firstName" name="firstName" required>
@@ -78,8 +27,7 @@
 
         <div id="result"></div>
 
-        <!-- Меню с кнопками после отправки данных -->
-        <div id="menu">
+        <div id="menu" style="display: none;">
             <button onclick="showInfo('contacts')">Контакты</button>
             <button onclick="showInfo('address')">Адрес</button>
             <button onclick="showInfo('location')">Местоположение</button>
@@ -88,41 +36,36 @@
     </div>
 
     <script>
-        // Инициализация Web App API от Telegram
         const tg = window.Telegram.WebApp;
 
         // Устанавливаем тему на основе предпочтений пользователя
-        tg.expand(); // Расширяем Web App на всю ширину
+        tg.expand();
 
-        // Обработчик отправки формы
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Получение данных из формы
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
 
-            // Объект с пользовательскими данными
             const userData = {
                 firstName: firstName,
                 lastName: lastName,
                 email: email
             };
 
-            // Проверяем наличие объекта tg
             if (tg && tg.sendData) {
-                tg.sendData(JSON.stringify(userData)); // Отправляем данные в Telegram боту
+                tg.sendData(JSON.stringify(userData));
                 document.getElementById('result').innerHTML = 'Данные успешно отправлены!';
+
                 // Скрываем форму и показываем меню
-                document.getElementById('userDataForm').style.display = 'none'; // Скрываем форму
-                document.getElementById('menu').style.display = 'block'; // Показываем меню
+                document.getElementById('userDataForm').style.display = 'none';
+                document.getElementById('menu').style.display = 'block'; // Обязательно показывает меню
             } else {
                 document.getElementById('result').innerHTML = 'Ошибка: Telegram Web App API не доступен.';
             }
         });
 
-        // Функция для отображения информации при нажатии на кнопки
         function showInfo(type) {
             let info = '';
 
@@ -131,19 +74,12 @@
             } else if (type === 'address') {
                 info = '<h2>Адрес</h2><p>г. Сасово, ул. Ленина, 18</p>';
             } else if (type === 'location') {
-                info = `
-                    <h2>Местоположение</h2>
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru!4v1698000185654!5m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
-                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                `;
+                info = `<h2>Местоположение</h2>
+                        <iframe src="https://www.google.com/maps/embed?...&center=54.347270,41.927676&zoom=17" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>`;
             }
 
             document.getElementById('info').innerHTML = info;
         }
-
-        // Функция для отладки
-        console.log(tg); // Проверьте, что объект tg корректно инициализирован
     </script>
 </body>
 </html>
