@@ -110,13 +110,13 @@
             const email = document.getElementById('email').value;
 
             // Отправляем данные боту через fetch API
-            fetch('https://api.telegram.org/botYOUR_API_TOKEN/sendMessage', {
+            fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    chat_id: 'CHAT_ID',
+                    chat_id: '832642362',
                     text: `Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}`,
                 }),
             })
