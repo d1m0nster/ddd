@@ -57,6 +57,10 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        #menuButtons {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -79,11 +83,18 @@
 
         <div id="result"></div>
 
+        <!-- Кнопки меню -->
+        <div id="menuButtons">
+            <button onclick="showSection('contacts')">Контакты</button>
+            <button onclick="showSection('hours')">Время работы</button>
+            <button onclick="showSection('location')">Местоположение</button>
+        </div>
+
         <div id="contacts" class="info">
             <h2>Контакты</h2>
             <p>Телефон: 8(49133)2-48-37. </p>
             <p>Электронная почта: mby.gdk@yandex.ru</p>
-            <p> gdk.sasovo@ryazan.gov.ru</p>
+            <p>gdk.sasovo@ryazan.gov.ru</p>
         </div>
 
         <div id="hours" class="info">
@@ -124,6 +135,7 @@
             .then(data => {
                 if (data.ok) {
                     document.getElementById('result').innerHTML = 'Данные отправлены успешно!';
+                    document.getElementById('menuButtons').style.display = 'block'; // Показать меню
                 } else {
                     document.getElementById('result').innerHTML = 'Ошибка при отправке данных.';
                 }
@@ -133,7 +145,16 @@
                 console.error('Error:', error);
             });
         });
+
+        // Функция для показа нужного раздела
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.info');
+            sections.forEach(section => {
+                section.style.display = 'none'; // Скрываем все секции
+            });
+
+            document.getElementById(sectionId).style.display = 'block'; // Показываем нужную секцию
+        }
     </script>
 </body>
 </html>
-
