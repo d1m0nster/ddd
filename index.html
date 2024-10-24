@@ -8,7 +8,7 @@
         /* Базовые стили по умолчанию */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #ffffff;
             color: #000000;
             margin: 0;
             padding: 20px;
@@ -131,7 +131,7 @@
             const buttonText = themeParams.button_text_color || '#ffffff';
 
             // Обновление стилей страницы с учётом темы
-            dynamicStyles.innerHTML =
+            dynamicStyles.innerHTML = `
                 body {
                     background-color: ${bgColor};
                     color: ${textColor};
@@ -154,12 +154,13 @@
                     color: ${textColor};
                     border-color: ${hintColor};
                 }
-            ;
+            `;
         }
 
         // Применяем тему Telegram при загрузке страницы, если доступно Web App
         if (isTelegramWebApp) {
             const themeParams = Telegram.WebApp.themeParams;
+            console.log('Telegram Theme Params: ', themeParams);  // Проверка данных темы
             applyTelegramTheme(themeParams);  // Применяем тему
 
             // Слушаем изменения темы (если пользователь меняет её в Telegram)
@@ -224,7 +225,7 @@
             document.getElementById('menuButtons').style.display = 'block';
         }
 
-        // Функция для показа нужного раздела
+        // Показываем нужный раздел при нажатии на кнопку меню
         function showSection(sectionId) {
             const sections = document.querySelectorAll('.info');
             sections.forEach(section => {
