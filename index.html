@@ -5,23 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
     <style>
+        /* Применяем цвета с использованием переменных Telegram Web App */
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--th-bg-color, #ffffff);
-            color: var(--th-text-color, #000000);
+            background-color: var(--tg-theme-bg-color, #ffffff); /* Цвет фона */
+            color: var(--tg-theme-text-color, #000000); /* Цвет текста */
             margin: 0;
             padding: 20px;
         }
         .container {
             max-width: 600px;
-            background-color: var(--th-secondary-bg-color, #ffffff);
+            background-color: var(--tg-theme-secondary-bg-color, #ffffff); /* Вторичный цвет фона */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
         h1 {
-            color: var(--th-text-color, #333);
+            color: var(--tg-theme-text-color, #000000); /* Цвет заголовка */
         }
         button {
             padding: 10px 20px;
@@ -30,8 +31,8 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: var(--th-theme-button-color, #4CAF50);
-            color: var(--th-theme-button-text-color, #ffffff);
+            background-color: var(--tg-theme-button-color, #4CAF50); /* Цвет кнопки */
+            color: var(--tg-theme-button-text-color, #ffffff); /* Цвет текста на кнопке */
         }
         .info {
             display: none;
@@ -50,16 +51,16 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: var(--th-hint-color, #000);
+            color: var(--tg-theme-hint-color, #999999); /* Цвет текста подсказок */
         }
         input {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
-            border: 1px solid var(--th-hint-color, #ccc);
-            background-color: var(--th-bg-color, #ffffff);
-            color: var(--th-text-color, #000000);
+            border: 1px solid var(--tg-theme-hint-color, #ccc); /* Цвет границы поля */
+            background-color: var(--tg-theme-bg-color, #ffffff); /* Цвет фона полей */
+            color: var(--tg-theme-text-color, #000000); /* Цвет текста в полях */
         }
         #menuButtons {
             display: none;
@@ -119,29 +120,6 @@
         // Проверяем, есть ли Web App окружение
         const isTelegramWebApp = typeof Telegram !== 'undefined' && typeof Telegram.WebApp !== 'undefined';
 
-        // Применяем тему Telegram при загрузке страницы, если доступно Web App
-        if (isTelegramWebApp) {
-            const themeParams = Telegram.WebApp.themeParams;
-
-            // Установка CSS-переменных из themeParams
-            document.documentElement.style.setProperty('--th-bg-color', themeParams.bg_color);
-            document.documentElement.style.setProperty('--th-text-color', themeParams.text_color);
-            document.documentElement.style.setProperty('--th-secondary-bg-color', themeParams.secondary_bg_color);
-            document.documentElement.style.setProperty('--th-hint-color', themeParams.hint_color);
-            document.documentElement.style.setProperty('--th-theme-button-color', themeParams.button_color);
-            document.documentElement.style.setProperty('--th-theme-button-text-color', themeParams.button_text_color);
-
-            // Слушаем изменения темы (если они произойдут)
-            Telegram.WebApp.onThemeChanged((newThemeParams) => {
-                document.documentElement.style.setProperty('--th-bg-color', newThemeParams.bg_color);
-                document.documentElement.style.setProperty('--th-text-color', newThemeParams.text_color);
-                document.documentElement.style.setProperty('--th-secondary-bg-color', newThemeParams.secondary_bg_color);
-                document.documentElement.style.setProperty('--th-hint-color', newThemeParams.hint_color);
-                document.documentElement.style.setProperty('--th-theme-button-color', newThemeParams.button_color);
-                document.documentElement.style.setProperty('--th-theme-button-text-color', newThemeParams.button_text_color);
-            });
-        }
-
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -151,16 +129,41 @@
             const email = document.getElementById('email').value;
 
             // Отправляем данные боту через fetch API
-            fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage
-        ', { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify({ chat_id: '832642362', text: Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}, }), }) .then(response => response.json()) .then(data => { if (data.ok) { document.getElementById('result').innerHTML = 'Данные отправлены успешно!'; document.getElementById('userDataForm').style.display = 'none'; // Скрыть форму document.getElementById('menuButtons').style.display = 'block'; // Показать кнопки меню } else { document.getElementById('result').innerHTML = 'Ошибка при отправке данных.'; } }) .catch(error => { document.getElementById('result').innerHTML = 'Произошла ошибка.'; console.error('Error:', error); }); });
-            // Показываем нужный раздел при нажатии на кнопку меню
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('.info');
-        sections.forEach(section => {
-            section.style.display = 'none'; // Скрываем все секции
+            fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: '832642362',  // Ваш chat_id
+                    text: `Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}`,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    document.getElementById('result').innerHTML = 'Данные отправлены успешно!';
+                    document.getElementById('userDataForm').style.display = 'none'; // Скрыть форму
+                    document.getElementById('menuButtons').style.display = 'block'; // Показать кнопки меню
+                } else {
+                    document.getElementById('result').innerHTML = 'Ошибка при отправке данных.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = 'Произошла ошибка.';
+                console.error('Error:', error);
+            });
         });
 
-        document.getElementById(sectionId).style.display = 'block'; // Показываем нужную секцию
-    }
-</script>
-</body> </html>
+        // Показываем нужный раздел при нажатии на кнопку меню
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.info');
+            sections.forEach(section => {
+                section.style.display = 'none'; // Скрываем все секции
+            });
+
+            document.getElementById(sectionId).style.display = 'block'; // Показываем нужную секцию
+        }
+    </script>
+</body>
+</html>
