@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
     <style id="dynamicStyles">
-        /* Базовые стили */
+        /* Базовые стили по умолчанию */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
+            color: #000000;
             margin: 0;
             padding: 20px;
         }
@@ -107,29 +108,29 @@
         <div id="location" class="info">
             <h2>Местоположение</h2>
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru!4v1698000185654!5m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.2411957323924!2d41.927676!3d54.347270!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413f1543531bb999%3A0x29db31c8899f69a!2z0L_RgC4g0KLQtdGA0LTRgNC-0L3QsNGPINGD0LsuLCAxOCwg0KXQvtC60L7RgNC-0LUsINCi0L7QvdC40YbQsCwgMzkyMDE1!5e0!3m2!1sru!2sru&center=54.347270,41.927676&zoom=17"
                 frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
-        // Проверяем, есть ли у нас Web App в окружении Telegram
+        // Проверяем, есть ли Web App окружение
         const isTelegramWebApp = typeof Telegram !== 'undefined' && typeof Telegram.WebApp !== 'undefined';
 
-        // Функция для установки темы
+        // Функция для установки темы в зависимости от параметров Web App
         function applyTelegramTheme(themeParams) {
-            if (!themeParams) return;  // Если нет themeParams, ничего не делаем
+            if (!themeParams) return;
 
             const dynamicStyles = document.getElementById('dynamicStyles');
 
-            // Применяем параметры темы к стилям
+            // Применение параметров темы из themeParams
             const bgColor = themeParams.bg_color || '#ffffff';
             const textColor = themeParams.text_color || '#000000';
             const hintColor = themeParams.hint_color || '#999999';
             const buttonColor = themeParams.button_color || '#4CAF50';
             const buttonText = themeParams.button_text_color || '#ffffff';
 
-            // Динамически меняем стили
+            // Обновление стилей страницы с учётом темы
             dynamicStyles.innerHTML = `
                 body {
                     background-color: ${bgColor};
@@ -156,10 +157,15 @@
             `;
         }
 
-        // Если мы внутри веб-приложения Telegram, то получаем тему
+        // Применяем тему Telegram при загрузке страницы, если доступно Web App
         if (isTelegramWebApp) {
             const themeParams = Telegram.WebApp.themeParams;
             applyTelegramTheme(themeParams);  // Применяем тему
+
+            // Слушаем изменения темы (если пользователь меняет её в Telegram)
+            Telegram.WebApp.onEvent('themeChanged', () => {
+                applyTelegramTheme(Telegram.WebApp.themeParams);
+            });
         }
 
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
@@ -176,11 +182,11 @@
                 email: email
             };
 
-            // Если мы внутри веб-приложения Telegram, то отправляем данные через Web App
+            // Отправляем данные через Web App, если внутри Telegram
             if (isTelegramWebApp) {
                 Telegram.WebApp.sendData(JSON.stringify(userData));
             } else {
-                // Отправляем данные боту через fetch API, если не в Telegram Web App
+                // Отправляем данные боту через fetch API, если не внутри Telegram
                 fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage', {
                     method: 'POST',
                     headers: {
