@@ -131,7 +131,7 @@
             const buttonText = themeParams.button_text_color || '#ffffff';
 
             // Обновление стилей страницы с учётом темы
-            dynamicStyles.innerHTML = `
+            dynamicStyles.innerHTML =
                 body {
                     background-color: ${bgColor};
                     color: ${textColor};
@@ -154,7 +154,7 @@
                     color: ${textColor};
                     border-color: ${hintColor};
                 }
-            `;
+            ;
         }
 
         // Применяем тему Telegram при загрузке страницы, если доступно Web App
