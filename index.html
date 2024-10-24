@@ -163,9 +163,9 @@
             console.log('Telegram Theme Params: ', themeParams);  // Проверка данных темы
             applyTelegramTheme(themeParams);  // Применяем тему
 
-            // Слушаем изменения темы (если пользователь меняет её в Telegram)
-            Telegram.WebApp.onEvent('themeChanged', () => {
-                applyTelegramTheme(Telegram.WebApp.themeParams);
+            // Слушаем изменения темы (если они произойдут)
+            Telegram.WebApp.onThemeChanged((newThemeParams) => {
+                applyTelegramTheme(newThemeParams);
             });
         }
 
@@ -177,53 +177,32 @@
             const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
 
-            const userData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email
-            };
-
-            // Отправляем данные через Web App, если внутри Telegram
-            if (isTelegramWebApp) {
-                Telegram.WebApp.sendData(JSON.stringify(userData));
-            } else {
-                // Отправляем данные боту через fetch API, если не внутри Telegram
-                fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: '832642362',
-                        text: `Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}`,
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        handleSuccess();
-                    } else {
-                        document.getElementById('result').innerHTML = 'Ошибка при отправке данных.';
-                    }
-                })
-                .catch(error => {
-                    document.getElementById('result').innerHTML = 'Произошла ошибка.';
-                    console.error('Error:', error);
-                });
-            }
+            // Отправляем данные боту через fetch API
+            fetch('https://api.telegram.org/bot7779315600:AAHmHPZ0UNjDqgWkwd8ATMRu1jQyjthZfjo/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: '832642362',  // Ваш chat_id
+                    text: `Имя: ${firstName}\nФамилия: ${lastName}\nEmail: ${email}`,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    document.getElementById('result').innerHTML = 'Данные отправлены успешно!';
+                    document.getElementById('userDataForm').style.display = 'none'; // Скрыть форму
+                    document.getElementById('menuButtons').style.display = 'block'; // Показать кнопки меню
+                } else {
+                    document.getElementById('result').innerHTML = 'Ошибка при отправке данных.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = 'Произошла ошибка.';
+                console.error('Error:', error);
+            });
         });
-
-        // Обработка успешной отправки данных
-        function handleSuccess() {
-            // Скрываем форму после успешной отправки
-            document.getElementById('userDataForm').style.display = 'none';
-
-            // Показываем сообщение об успехе
-            document.getElementById('result').innerHTML = 'Данные отправлены успешно!';
-
-            // Показываем меню с кнопками
-            document.getElementById('menuButtons').style.display = 'block';
-        }
 
         // Показываем нужный раздел при нажатии на кнопку меню
         function showSection(sectionId) {
