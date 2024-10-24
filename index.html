@@ -5,24 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
     <style id="dynamicStyles">
-        /* Базовые стили по умолчанию */
+        /* Базовые стили с CSS-переменными */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --button-color: #4CAF50;
+            --button-text-color: #ffffff;
+            --hint-color: #999999;
+            --secondary-bg-color: #ffffff;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
         }
         .container {
             max-width: 600px;
-            background-color: white;
+            background-color: var(--secondary-bg-color);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
         h1 {
-            color: #333;
+            color: var(--text-color);
         }
         button {
             padding: 10px 20px;
@@ -31,8 +40,8 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: var(--button-color);
+            color: var(--button-text-color);
         }
         .info {
             display: none;
@@ -51,13 +60,16 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: var(--hint-color);
         }
         input {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--hint-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         #menuButtons {
             display: none;
@@ -121,40 +133,13 @@
         function applyTelegramTheme(themeParams) {
             if (!themeParams) return;
 
-            const dynamicStyles = document.getElementById('dynamicStyles');
-
-            // Применение параметров темы из themeParams
-            const bgColor = themeParams.bg_color || '#ffffff';
-            const textColor = themeParams.text_color || '#000000';
-            const hintColor = themeParams.hint_color || '#999999';
-            const buttonColor = themeParams.button_color || '#4CAF50';
-            const buttonText = themeParams.button_text_color || '#ffffff';
-
             // Обновление стилей страницы с учётом темы
-            dynamicStyles.innerHTML = `
-                body {
-                    background-color: ${bgColor};
-                    color: ${textColor};
-                }
-                .container {
-                    background-color: ${themeParams.secondary_bg_color || '#ffffff'};
-                }
-                h1 {
-                    color: ${textColor};
-                }
-                button {
-                    background-color: ${buttonColor};
-                    color: ${buttonText};
-                }
-                label {
-                    color: ${hintColor};
-                }
-                input {
-                    background-color: ${bgColor};
-                    color: ${textColor};
-                    border-color: ${hintColor};
-                }
-            `;
+            document.documentElement.style.setProperty('--bg-color', themeParams.bg_color || '#ffffff');
+            document.documentElement.style.setProperty('--text-color', themeParams.text_color || '#000000');
+            document.documentElement.style.setProperty('--button-color', themeParams.button_color || '#4CAF50');
+            document.documentElement.style.setProperty('--button-text-color', themeParams.button_text_color || '#ffffff');
+            document.documentElement.style.setProperty('--hint-color', themeParams.hint_color || '#999999');
+            document.documentElement.style.setProperty('--secondary-bg-color', themeParams.secondary_bg_color || '#ffffff');
         }
 
         // Применяем тему Telegram при загрузке страницы, если доступно Web App
@@ -211,8 +196,6 @@
                 section.style.display = 'none'; // Скрываем все секции
             });
 
-            document.getElementById(sectionId).style.display = 'block'; // Показываем нужную секцию
-        }
-    </script>
-</body>
-</html>
+            document.getElementById(sectionId).style.display = 'block'; // Показываем нужную секцию } </script>
+
+</body> </html>
