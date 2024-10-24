@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
     <style>
-        /* Применяем цвета с использованием переменных Telegram Web App */
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff); /* Цвет фона */
-            color: var(--tg-theme-text-color, #000000); /* Цвет текста */
+            background-color: var(--tg-theme-bg-color, #ffffff); /* Цвет фона из Telegram */
+            color: var(--tg-theme-text-color, #000000); /* Цвет текста из Telegram */
             margin: 0;
             padding: 20px;
         }
@@ -18,7 +17,7 @@
             background-color: var(--tg-theme-secondary-bg-color, #ffffff); /* Вторичный цвет фона */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         h1 {
@@ -31,8 +30,8 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: var(--tg-theme-button-color, #4CAF50); /* Цвет кнопки */
-            color: var(--tg-theme-button-text-color, #ffffff); /* Цвет текста на кнопке */
+            background-color: var(--tg-theme-button-color, #4CAF50); /* Цвет кнопки из Telegram */
+            color: var(--tg-theme-button-text-color, #ffffff); /* Цвет текста кнопки */
         }
         .info {
             display: none;
@@ -58,7 +57,7 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
-            border: 1px solid var(--tg-theme-hint-color, #ccc); /* Цвет границы поля */
+            border: 1px solid var(--tg-theme-hint-color, #ccc); /* Цвет границы */
             background-color: var(--tg-theme-bg-color, #ffffff); /* Цвет фона полей */
             color: var(--tg-theme-text-color, #000000); /* Цвет текста в полях */
         }
@@ -117,9 +116,15 @@
     </div>
 
     <script>
-        // Проверяем, есть ли Web App окружение
+        // Проверяем, работает ли приложение в окружении Telegram WebApp
         const isTelegramWebApp = typeof Telegram !== 'undefined' && typeof Telegram.WebApp !== 'undefined';
 
+        // Инициализация WebApp темы
+        if (isTelegramWebApp) {
+            Telegram.WebApp.ready();
+        }
+
+        // Обработчик формы
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
