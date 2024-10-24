@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сасовский Дом Культуры</title>
-    <style>
+    <style id="dynamicStyles">
+        /* Базовые стили */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -114,6 +115,52 @@
     <script>
         // Проверяем, есть ли у нас Web App в окружении Telegram
         const isTelegramWebApp = typeof Telegram !== 'undefined' && typeof Telegram.WebApp !== 'undefined';
+
+        // Функция для установки темы
+        function applyTelegramTheme(themeParams) {
+            if (!themeParams) return;  // Если нет themeParams, ничего не делаем
+
+            const dynamicStyles = document.getElementById('dynamicStyles');
+
+            // Применяем параметры темы к стилям
+            const bgColor = themeParams.bg_color || '#ffffff';
+            const textColor = themeParams.text_color || '#000000';
+            const hintColor = themeParams.hint_color || '#999999';
+            const buttonColor = themeParams.button_color || '#4CAF50';
+            const buttonText = themeParams.button_text_color || '#ffffff';
+
+            // Динамически меняем стили
+            dynamicStyles.innerHTML = `
+                body {
+                    background-color: ${bgColor};
+                    color: ${textColor};
+                }
+                .container {
+                    background-color: ${themeParams.secondary_bg_color || '#ffffff'};
+                }
+                h1 {
+                    color: ${textColor};
+                }
+                button {
+                    background-color: ${buttonColor};
+                    color: ${buttonText};
+                }
+                label {
+                    color: ${hintColor};
+                }
+                input {
+                    background-color: ${bgColor};
+                    color: ${textColor};
+                    border-color: ${hintColor};
+                }
+            `;
+        }
+
+        // Если мы внутри веб-приложения Telegram, то получаем тему
+        if (isTelegramWebApp) {
+            const themeParams = Telegram.WebApp.themeParams;
+            applyTelegramTheme(themeParams);  // Применяем тему
+        }
 
         document.getElementById('userDataForm').addEventListener('submit', function(event) {
             event.preventDefault();
